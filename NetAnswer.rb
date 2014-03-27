@@ -3,12 +3,19 @@ require 'json'
 
 class NetAnswer
   def call
-    csv = get_mechanize_res
-    csv.save_as('./detail_' + Time.now.strftime("%Y%m") + '.csv')
+    auth_list = open('./auth.txt') {|i| JSON.load(i)}
+    auth_list.each do |auth|
+      csv = get_mechanize_res(auth)
+      if(csv)
+        csv.save_as('./detail_' + Time.now.strftime('%Y%m') + '_' + auth['name'] + '.csv')
+      else
+        Mechanize::File.new.save_as('./detail_' + Time.now.strftime('%Y%m') + '_' + auth['name'] + '.csv')
+      end
+    end
+    nil
   end
 
-  def get_mechanize_res
-    auth = open('./auth.txt') {|i| JSON.load(i)}
+  def get_mechanize_res(auth)
     agent = Mechanize.new
     agent.user_agent_alias = 'Mac Safari'
     login = agent.get 'https://netanswerplus.saisoncard.co.jp/WebPc/welcomeSCR.do'
@@ -17,7 +24,8 @@ class NetAnswer
     login_form.field_with(:name=>'inputPassword').value = auth['password']
     mypage = login_form.click_button
     detail = mypage.link_with(:text=>'利用明細確認').click
-    csv = detail.link_with(:text=>'CSVダウンロード').click
+    csv_link = detail.link_with(:text=>'CSVダウンロード')
+    csv = csv_link.click unless csv_link.nil?
     mypage.link_with(:text=>'ログアウト').click
     csv
   end
