@@ -1,4 +1,4 @@
-load './CreditCardHistory/NetAnswer.rb'
+load 'NetAnswer.rb'
 
 class CreditCardHistory
 
