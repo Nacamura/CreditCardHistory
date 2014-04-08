@@ -10,7 +10,6 @@ class CreditCardHistory
     Dir.new('./').each do |file|
       if(File.extname(file) == ".csv")
       	dropbox.upload('/', './', file)
-        File.delete(file)
       end
     end
   end
