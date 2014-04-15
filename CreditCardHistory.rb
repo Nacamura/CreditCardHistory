@@ -4,8 +4,7 @@ load 'DropboxUtil.rb'
 class CreditCardHistory
 
   def call
-    netanswer = NetAnswer.new
-    netanswer.call
+    NetAnswer.new.call
     dropbox = DropboxUtil.new
     Dir.new('./').each do |file|
       if(File.extname(file) == ".csv")
