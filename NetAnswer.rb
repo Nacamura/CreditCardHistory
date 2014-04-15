@@ -23,7 +23,8 @@ class NetAnswer
     login_form.field_with(:name=>'inputId').value = auth['id']
     login_form.field_with(:name=>'inputPassword').value = auth['password']
     mypage = login_form.click_button
-    detail = mypage.link_with(:text=>'利用明細確認').click
+    detail_link = mypage.link_with(:text=>'利用明細確認')
+    detail = detail_link.click unless detail_link.nil?
     csv_link = detail.link_with(:text=>'CSVダウンロード')
     csv = csv_link.click unless csv_link.nil?
     mypage.link_with(:text=>'ログアウト').click
